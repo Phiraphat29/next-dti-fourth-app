@@ -145,6 +145,7 @@ export default function page() {
             <option value="36">36 เดือน</option>
             <option value="48">48 เดือน</option>
             <option value="60">60 เดือน</option>
+            <option value="72">72 เดือน</option>
           </select>
         </div>
 
