@@ -2,8 +2,53 @@
 
 import React from "react";
 import Image from "next/image";
+import { useState } from "react";
 
-export default function page() {
+export default function Page() {
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("male");
+  const [result, setResult] = useState("0.00");
+
+  const handlerCalculate = () => {
+    // Validate Input
+    if (
+      !weight ||
+      !height ||
+      !age ||
+      parseFloat(weight) <= 0 ||
+      parseFloat(height) <= 0 ||
+      parseFloat(age) <= 0
+    ) {
+      alert("กรุณาระบุข้อมูลให้ถูกต้อง และต้องมากกว่า 0");
+      return;
+    }
+    // Calculate BMR
+    if (gender === "male") {
+      const bmr =
+        66.5 +
+        13.75 * parseFloat(weight) +
+        5.003 * parseFloat(height) -
+        6.755 * parseInt(age);
+      setResult(bmr.toFixed(2).toString());
+    } else {
+      const bmr =
+        655.1 +
+        9.563 * parseFloat(weight) +
+        1.85 * parseFloat(height) -
+        4.676 * parseInt(age);
+      setResult(bmr.toFixed(2).toString());
+    }
+  };
+
+  const handlerReset = () => {
+    setWeight("");
+    setHeight("");
+    setAge("");
+    setGender("male");
+    setResult("0.00");
+  };
   return (
     <div className="bg-[#f0f4f8] flex justify-center items-center min-h-screen p-8 w-full">
       <div className="bg-white rounded-[1.5rem] shadow-xl p-10 max-w-[450px] w-full text-center">
@@ -30,6 +75,8 @@ export default function page() {
             id="weight"
             placeholder="เช่น 65"
             className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
           />
         </div>
 
@@ -46,6 +93,8 @@ export default function page() {
             id="height"
             placeholder="เช่น 170"
             className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
           />
         </div>
 
@@ -62,6 +111,8 @@ export default function page() {
             id="age"
             placeholder="เช่น 25"
             className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-gray-50 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
           />
         </div>
 
@@ -75,15 +126,26 @@ export default function page() {
           </label>
           <div className="flex gap-4">
             <label className="flex items-center">
-              <input type="radio" name="gender" value="male" className="mr-2" />
+              <input
+                id="male"
+                value="male"
+                checked={gender === "male"}
+                type="radio"
+                name="gender"
+                className="mr-2"
+                onChange={(e) => setGender(e.target.value)}
+              />
               ชาย
             </label>
             <label className="flex items-center">
               <input
+                id="female"
+                value="female"
+                checked={gender === "female"}
                 type="radio"
                 name="gender"
-                value="female"
                 className="mr-2"
+                onChange={(e) => setGender(e.target.value)}
               />
               หญิง
             </label>
@@ -92,10 +154,16 @@ export default function page() {
 
         {/* <!-- Buttons --> */}
         <div className="gap-4 justify-center mt-8 md:flex-row flex-col">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 mb-4 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 w-full">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 mb-4 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 w-full"
+            onClick={handlerCalculate}
+          >
             คำนวณ BMR
           </button>
-          <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 w-full">
+          <button
+            className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 w-full"
+            onClick={handlerReset}
+          >
             รีเซ็ต
           </button>
         </div>
@@ -104,7 +172,7 @@ export default function page() {
         <p className="text-lg font-semibold text-gray-700 mt-6">
           ค่า BMR ที่คำนวณได้:{" "}
           <span id="result" className="text-blue-600 font-bold">
-            0.00
+            {result}
           </span>
         </p>
       </div>
